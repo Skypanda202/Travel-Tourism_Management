@@ -1,4 +1,0 @@
-SQLALCHEMY_DATABASE_URI = 'sqlite:///tourism.db'
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-SECRET_KEY = "secret123"
-ADMIN_TOKEN = "admin123"
