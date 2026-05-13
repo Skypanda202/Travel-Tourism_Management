@@ -13,15 +13,15 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # App URLs
-    path('users/', include('users.urls')),
-    path('places/', include('places.urls')),
-    path('bookings/', include('bookings.urls')),
-    path('cabs/', include('cabs.urls')),
-    path('reviews/', include('reviews.urls')),
-    path('travel-plans/', include('travel_plans.urls')),
-    path('payments/', include('payments.urls')),
-    path('analytics/', include('analytics.urls')),
-    path('notifications/', include('notifications.urls')),
+    path('users/', include('apps.users.urls')),
+    path('places/', include('apps.places.urls')),
+    path('bookings/', include('apps.bookings.urls')),
+    path('cabs/', include('apps.cabs.urls')),
+    path('reviews/', include('apps.reviews.urls')),
+    path('travel-plans/', include('apps.travel_plans.urls')),
+    path('payments/', include('apps.payments.urls')),
+    path('analytics/', include('apps.analytics.urls')),
+    path('notifications/', include('apps.notifications.urls')),
 ]
 
 # Media + Static Files
