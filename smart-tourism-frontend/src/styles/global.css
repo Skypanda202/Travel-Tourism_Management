@@ -1,0 +1,50 @@
+.dark-theme {
+  background-color: #121212;
+  color: white;
+}
+
+.dark-theme .card {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+.dark-theme .table {
+  color: white;
+}
+
+.dark-theme .modal-content {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+.dark-theme .form-control {
+  background-color: #2b2b2b;
+  color: white;
+  border: none;
+}
+
+.dark-theme .navbar {
+  background-color: #000 !important;
+}
+
+.dark-theme footer {
+  background-color: #000;
+}
+.hero-section {
+  min-height: 100vh;
+
+  background:
+    linear-gradient(
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e");
+
+  background-size: cover;
+
+  background-position: center;
+
+  display: flex;
+
+  align-items: center;
+}
