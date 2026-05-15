@@ -1,122 +1,110 @@
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Table,
-  Badge,
-} from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { FaCalendarAlt, FaHeart, FaMapMarkedAlt, FaStar } from "react-icons/fa";
+import axiosInstance from "../../api/axiosInstance";
 
-import {
-  FaMapMarkedAlt,
-  FaHeart,
-  FaTaxi,
-  FaCalendarAlt,
-} from "react-icons/fa";
+const statCards = [
+  { key: "total_bookings", label: "Total bookings", icon: FaCalendarAlt },
+  { key: "upcoming_bookings", label: "Upcoming trips", icon: FaMapMarkedAlt },
+  { key: "saved_places", label: "Saved places", icon: FaHeart },
+  { key: "total_reviews", label: "Reviews", icon: FaStar },
+];
 
 const UserDashboard = () => {
+  const [stats, setStats] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const [dashboardResponse, profileResponse] = await Promise.all([
+          axiosInstance.get("users/dashboard/"),
+          axiosInstance.get("users/profile/"),
+        ]);
+
+        setStats(dashboardResponse.data.data || {});
+        setProfile(profileResponse.data.data || null);
+      } catch (fetchError) {
+        console.log(fetchError);
+        setError("Could not load your account details. Please login again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboard();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="loading-wrap">
+        <Spinner animation="border" role="status" />
+      </div>
+    );
+  }
+
   return (
-    <Container fluid className="py-4 px-4">
-      <h2 className="mb-4 fw-bold">
-        User Dashboard
-      </h2>
+    <section className="section-band">
+      <Container>
+        <Row className="align-items-end mb-4 g-3">
+          <Col lg={8}>
+            <span className="section-eyebrow">Visitor account</span>
+            <h1 className="section-title">My account</h1>
+            <p className="section-copy">
+              {profile?.full_name || profile?.email
+                ? `Welcome${profile.full_name ? `, ${profile.full_name}` : ""}.`
+                : "Your trip activity appears here after you start using the app."}
+            </p>
+          </Col>
 
-      {/* Stats */}
-      <Row className="mb-4">
-        <Col md={3}>
-          <Card className="shadow border-0 rounded-4 p-3">
-            <div className="d-flex align-items-center">
-              <FaMapMarkedAlt size={40} />
+          <Col lg={4} className="text-lg-end">
+            <Button as={Link} to="/places" className="btn-primary-soft me-2 mb-2">
+              Explore places
+            </Button>
+            <Button as={Link} to="/favorites" className="btn-outline-soft mb-2">
+              Favorites
+            </Button>
+          </Col>
+        </Row>
 
-              <div className="ms-3">
-                <h5>Total Tours</h5>
-                <h3>18</h3>
+        {error ? <Alert variant="warning">{error}</Alert> : null}
+
+        <Row className="g-4">
+          {statCards.map(({ key, label, icon: Icon }) => (
+            <Col md={6} lg={3} key={key}>
+              <div className="feature-card">
+                <span className="feature-icon mb-3">
+                  <Icon />
+                </span>
+                <h2 className="h5 fw-bold">{label}</h2>
+                <p className="display-6 fw-bold mb-0">{stats?.[key] ?? 0}</p>
               </div>
-            </div>
-          </Card>
-        </Col>
+            </Col>
+          ))}
+        </Row>
 
-        <Col md={3}>
-          <Card className="shadow border-0 rounded-4 p-3">
-            <div className="d-flex align-items-center">
-              <FaHeart size={40} />
-
-              <div className="ms-3">
-                <h5>Favorites</h5>
-                <h3>9</h3>
-              </div>
-            </div>
-          </Card>
-        </Col>
-
-        <Col md={3}>
-          <Card className="shadow border-0 rounded-4 p-3">
-            <div className="d-flex align-items-center">
-              <FaTaxi size={40} />
-
-              <div className="ms-3">
-                <h5>Cab Bookings</h5>
-                <h3>5</h3>
-              </div>
-            </div>
-          </Card>
-        </Col>
-
-        <Col md={3}>
-          <Card className="shadow border-0 rounded-4 p-3">
-            <div className="d-flex align-items-center">
-              <FaCalendarAlt size={40} />
-
-              <div className="ms-3">
-                <h5>Upcoming Trips</h5>
-                <h3>3</h3>
-              </div>
-            </div>
-          </Card>
-        </Col>
-      </Row>
-
-      {/* Recent Bookings */}
-      <Card className="shadow border-0 rounded-4">
-        <Card.Body>
-          <h4 className="mb-4">
-            Recent Bookings
-          </h4>
-
-          <Table responsive hover>
-            <thead>
-              <tr>
-                <th>Destination</th>
-                <th>Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>Goa Beach</td>
-                <td>12 May 2026</td>
-                <td>
-                  <Badge bg="success">
-                    Confirmed
-                  </Badge>
-                </td>
-              </tr>
-
-              <tr>
-                <td>Manali Hills</td>
-                <td>20 May 2026</td>
-                <td>
-                  <Badge bg="warning">
-                    Pending
-                  </Badge>
-                </td>
-              </tr>
-            </tbody>
-          </Table>
-        </Card.Body>
-      </Card>
-    </Container>
+        <div className="detail-panel mt-4">
+          <h2 className="h4 fw-bold">Next steps</h2>
+          <p className="section-copy mb-3">
+            Browse tourist places, save favorites, or book a cab when you are
+            ready to plan a visit.
+          </p>
+          <div className="d-flex flex-wrap gap-2">
+            <Button as={Link} to="/places" className="btn-primary-soft">
+              Browse places
+            </Button>
+            <Button as={Link} to="/cab-booking" className="btn-outline-soft">
+              Book cab
+            </Button>
+          </div>
+        </div>
+      </Container>
+    </section>
   );
 };
 

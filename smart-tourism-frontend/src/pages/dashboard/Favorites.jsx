@@ -1,59 +1,75 @@
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-} from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import axiosInstance from "../../api/axiosInstance";
+import PlaceCard from "../../components/cards/PlaceCard";
 
 const Favorites = () => {
-  const favorites = [
-    {
-      id: 1,
-      name: "Goa",
-      image:
-        "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86",
-    },
-    {
-      id: 2,
-      name: "Manali",
-      image:
-        "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-    },
-  ];
+  const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const response = await axiosInstance.get("users/favorites/");
+        setFavorites(response.data.data || []);
+      } catch (fetchError) {
+        console.log(fetchError);
+        setError("Could not load favorites. Please login again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFavorites();
+  }, []);
 
   return (
-    <Container className="py-5">
-      <h2 className="mb-4">
-        Favorite Places
-      </h2>
-
-      <Row>
-        {favorites.map((place) => (
-          <Col md={4} key={place.id}>
-            <Card className="shadow border-0 rounded-4 mb-4">
-              <Card.Img
-                src={place.image}
-                style={{
-                  height: "250px",
-                  objectFit: "cover",
-                }}
-              />
-
-              <Card.Body>
-                <Card.Title>
-                  {place.name}
-                </Card.Title>
-
-                <Button variant="danger">
-                  Remove
-                </Button>
-              </Card.Body>
-            </Card>
+    <section className="section-band">
+      <Container>
+        <Row className="align-items-end mb-4 g-3">
+          <Col lg={8}>
+            <span className="section-eyebrow">Saved places</span>
+            <h1 className="section-title">Favorites</h1>
+            <p className="section-copy">
+              Places you save from the destination pages will appear here.
+            </p>
           </Col>
-        ))}
-      </Row>
-    </Container>
+          <Col lg={4} className="text-lg-end">
+            <Button as={Link} to="/places" className="btn-primary-soft">
+              Browse places
+            </Button>
+          </Col>
+        </Row>
+
+        {error ? <Alert variant="warning">{error}</Alert> : null}
+
+        {loading ? (
+          <div className="loading-wrap">
+            <Spinner animation="border" role="status" />
+          </div>
+        ) : favorites.length ? (
+          <Row className="g-4">
+            {favorites.map((favorite) => (
+              <Col md={6} lg={4} key={favorite.id}>
+                <PlaceCard place={favorite.place} />
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <div className="empty-state">
+            <h2 className="h4 text-dark">No favorites yet</h2>
+            <p className="mb-3">Explore places and save the ones you like.</p>
+            <Button as={Link} to="/places" className="btn-primary-soft">
+              Explore places
+            </Button>
+          </div>
+        )}
+      </Container>
+    </section>
   );
 };
 

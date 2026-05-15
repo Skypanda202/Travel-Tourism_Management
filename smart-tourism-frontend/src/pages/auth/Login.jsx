@@ -1,167 +1,101 @@
-import React, {
-  useContext,
-} from "react";
-
-import {
-  Container,
-  Form,
-  Button,
-  Card,
-} from "react-bootstrap";
-
-import axiosInstance from "../../api/axiosInstance";
-
-import { AuthContext }
-from "../../context/AuthContext";
-
-import { useNavigate }
-from "react-router-dom";
-
-// React Hook Form
-import { useForm }
-from "react-hook-form";
-
-import { yupResolver }
-from "@hookform/resolvers/yup";
-
+import { useContext } from "react";
+import { Button, Container, Form } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import * as yup from "yup";
+import axiosInstance from "../../api/axiosInstance";
+import AuthContext from "../../context/authContextValue";
 
-// Toast
-import { toast }
-from "react-toastify";
-
-// Validation Schema
 const schema = yup.object({
-  email: yup
-    .string()
-    .email("Enter valid email")
-    .required("Email is required"),
-
-  password: yup
-    .string()
-    .min(6, "Minimum 6 characters")
-    .required("Password is required"),
+  email: yup.string().email("Enter a valid email").required("Email is required"),
+  password: yup.string().min(6, "Minimum 6 characters").required("Password is required"),
 });
 
 const Login = () => {
-
-  const { login } =
-    useContext(AuthContext);
-
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // React Hook Form
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  // Submit Function
   const onSubmit = async (data) => {
-
     try {
+      const response = await axiosInstance.post("login/", {
+        email: data.email,
+        password: data.password,
+      });
 
-      const response =
-        await axiosInstance.post(
-          "login/",
-          {
-            email: data.email,
-            password: data.password,
-          }
-        );
+      const accessToken = response.data.access || response.data.access_token;
+      const decodedUser = login(accessToken);
+      const isAdmin = decodedUser.is_admin || decodedUser.role === "admin";
 
-      // Save JWT token
-      login(response.data.access);
-
-      // Success Toast
-      toast.success(
-        "Login Successful!"
-      );
-
-      // Redirect
-      navigate("/");
-
+      toast.success("Login successful");
+      navigate(isAdmin ? "/admin/places" : "/dashboard");
     } catch (error) {
-
       console.log(error);
-
-      toast.error(
-        "Invalid email or password"
-      );
+      toast.error("Invalid email or password");
     }
   };
 
   return (
-    <Container className="py-5">
+    <section className="auth-page">
+      <Container>
+        <div className="auth-card">
+          <span className="section-eyebrow">Welcome back</span>
+          <h1 className="h2 fw-bold mt-2 mb-2">Login to continue</h1>
+          <p className="section-copy mb-4">
+            Access saved places, bookings, and your travel dashboard.
+          </p>
 
-      <Card
-        className="p-4 shadow-lg border-0 rounded-4 mx-auto"
-        style={{ maxWidth: "500px" }}
-      >
+          <Form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <Form.Group className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="you@example.com"
+                isInvalid={Boolean(errors.email)}
+                {...register("email")}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.email?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-        <h2 className="text-center mb-4">
-          Login
-        </h2>
+            <Form.Group className="mb-4">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Enter password"
+                isInvalid={Boolean(errors.password)}
+                {...register("password")}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.password?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-        <Form
-          onSubmit={handleSubmit(onSubmit)}
-        >
+            <Button
+              className="btn-primary-soft w-100"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Logging in..." : "Login"}
+            </Button>
+          </Form>
 
-          {/* Email */}
-          <Form.Group className="mb-3">
-
-            <Form.Label>
-              Email
-            </Form.Label>
-
-            <Form.Control
-              type="email"
-              placeholder="Enter email"
-              {...register("email")}
-            />
-
-            <p className="text-danger mt-1">
-              {errors.email?.message}
-            </p>
-
-          </Form.Group>
-
-          {/* Password */}
-          <Form.Group className="mb-3">
-
-            <Form.Label>
-              Password
-            </Form.Label>
-
-            <Form.Control
-              type="password"
-              placeholder="Enter password"
-              {...register("password")}
-            />
-
-            <p className="text-danger mt-1">
-              {errors.password?.message}
-            </p>
-
-          </Form.Group>
-
-          {/* Login Button */}
-          <Button
-            variant="dark"
-            type="submit"
-            className="w-100"
-          >
-            Login
-          </Button>
-
-        </Form>
-
-      </Card>
-
-    </Container>
+          <p className="section-copy text-center mt-4 mb-0">
+            New here? <Link to="/register">Create an account</Link>
+          </p>
+        </div>
+      </Container>
+    </section>
   );
 };
 

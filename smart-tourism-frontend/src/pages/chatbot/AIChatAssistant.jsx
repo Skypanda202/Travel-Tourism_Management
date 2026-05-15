@@ -1,142 +1,105 @@
-import {
-  Container,
-  Card,
-  Form,
-  Button,
-  Spinner,
-} from "react-bootstrap";
-
-import { useState } from "react";
-
-import { sendAIMessage }
-from "../../services/aiService";
+import { useEffect, useRef, useState } from "react";
+import { Button, Container, Form, Spinner } from "react-bootstrap";
+import { FaPaperPlane } from "react-icons/fa";
+import { sendAIMessage } from "../../services/aiService";
 
 const AIChatAssistant = () => {
-  const [message, setMessage] =
-    useState("");
+  const [message, setMessage] = useState("");
+  const [chat, setChat] = useState([
+    {
+      type: "bot",
+      text: "Tell me where you are starting from, what kind of places you like, and how much time you have.",
+    },
+  ]);
+  const [loading, setLoading] = useState(false);
+  const chatEndRef = useRef(null);
 
-  const [chat, setChat] = useState([]);
-
-  const [loading, setLoading] =
-    useState(false);
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat, loading]);
 
   const sendMessage = async () => {
-    if (!message.trim()) return;
+    const nextMessage = message.trim();
+    if (!nextMessage || loading) {
+      return;
+    }
 
-    const userMessage = {
-      type: "user",
-      text: message,
-    };
-
-    setChat((prev) => [
-      ...prev,
-      userMessage,
-    ]);
-
+    setChat((current) => [...current, { type: "user", text: nextMessage }]);
+    setMessage("");
     setLoading(true);
 
     try {
-      const response =
-        await sendAIMessage(message);
-
-      const botMessage = {
-        type: "bot",
-        text: response.reply,
-      };
-
-      setChat((prev) => [
-        ...prev,
-        botMessage,
+      const response = await sendAIMessage(nextMessage);
+      setChat((current) => [
+        ...current,
+        {
+          type: "bot",
+          text: response.reply || "I could not prepare a reply right now. Please try again.",
+        },
       ]);
     } catch (error) {
       console.log(error);
+      setChat((current) => [
+        ...current,
+        {
+          type: "bot",
+          text: "The assistant is temporarily unavailable. Please try again in a moment.",
+        },
+      ]);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    setLoading(false);
-
-    setMessage("");
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    sendMessage();
   };
 
   return (
-    <Container className="py-5">
-      <Card className="shadow-lg border-0 rounded-4">
-        <Card.Body>
-          <h3 className="mb-4">
-            AI Travel Assistant
-          </h3>
+    <section className="section-band ai-page">
+      <Container>
+        <div className="ai-shell">
+          <div className="ai-header">
+            <span className="section-eyebrow">AI travel assistant</span>
+            <h1>Plan a better Kalahandi visit</h1>
+          </div>
 
-          {/* Chat Window */}
-          <div
-            style={{
-              height: "450px",
-              overflowY: "auto",
-              background: "#f5f5f5",
-              padding: "20px",
-              borderRadius: "15px",
-            }}
-          >
-            {chat.map((msg, index) => (
-              <div
-                key={index}
-                className={`d-flex mb-3 ${
-                  msg.type === "user"
-                    ? "justify-content-end"
-                    : "justify-content-start"
-                }`}
-              >
-                <div
-                  style={{
-                    background:
-                      msg.type === "user"
-                        ? "#000"
-                        : "#e4e4e4",
-
-                    color:
-                      msg.type === "user"
-                        ? "#fff"
-                        : "#000",
-
-                    padding: "12px 18px",
-
-                    borderRadius: "20px",
-
-                    maxWidth: "70%",
-                  }}
-                >
-                  {msg.text}
+          <div className="ai-chat-window" aria-live="polite">
+            {chat.map((item, index) => (
+              <div className={`ai-message-row ${item.type === "user" ? "is-user" : ""}`} key={`${item.type}-${index}`}>
+                <div className={`ai-message ${item.type === "user" ? "is-user" : "is-bot"}`}>
+                  {item.text}
                 </div>
               </div>
             ))}
 
-            {loading && (
-              <div className="text-center">
-                <Spinner animation="border" />
+            {loading ? (
+              <div className="ai-message-row">
+                <div className="ai-message is-bot">
+                  <Spinner animation="border" size="sm" className="me-2" />
+                  Preparing answer...
+                </div>
               </div>
-            )}
+            ) : null}
+            <div ref={chatEndRef} />
           </div>
 
-          {/* Input */}
-          <div className="d-flex mt-4">
+          <Form className="ai-input-bar" onSubmit={handleSubmit}>
             <Form.Control
               type="text"
-              placeholder="Ask your travel question..."
+              placeholder="Ask about places, routes, timing, food, or trip ideas"
               value={message}
-              onChange={(e) =>
-                setMessage(e.target.value)
-              }
+              onChange={(event) => setMessage(event.target.value)}
             />
-
-            <Button
-              variant="dark"
-              className="ms-2"
-              onClick={sendMessage}
-            >
-              Send
+            <Button type="submit" className="btn-primary-soft" disabled={loading || !message.trim()}>
+              <FaPaperPlane className="me-sm-2" />
+              <span className="d-none d-sm-inline">Send</span>
             </Button>
-          </div>
-        </Card.Body>
-      </Card>
-    </Container>
+          </Form>
+        </div>
+      </Container>
+    </section>
   );
 };
 

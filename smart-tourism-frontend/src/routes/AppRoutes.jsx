@@ -7,6 +7,7 @@ import {
 // Layouts
 import MainLayout from "../layouts/MainLayout";
 import AdminLayout from "../layouts/AdminLayout";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 // Home
 import Home from "../pages/home/Home";
@@ -27,7 +28,7 @@ import Favorites from "../pages/dashboard/Favorites";
 import CabBooking from "../pages/booking/CabBooking";
 
 // Weather
-import WeatherPage from "../pages/weather/WeatherPage";
+// import WeatherPage from "../pages/weather/WeatherPage";
 
 // Chatbot
 import AIChatAssistant from "../pages/chatbot/AIChatAssistant";
@@ -41,6 +42,8 @@ import AddTouristPlace from "../pages/admin/AddTouristPlace";
 import BookingManagement from "../pages/admin/BookingManagement";
 import UserManagement from "../pages/admin/UserManagement";
 import ReviewsManagement from "../pages/admin/ReviewsManagement";
+import CabManagement from "../pages/admin/CabManagement";
+import RevenueDashboard from "../pages/admin/RevenueDashboard";
 
 const AppRoutes = () => {
   return (
@@ -98,7 +101,9 @@ const AppRoutes = () => {
           path="/dashboard"
           element={
             <MainLayout>
-              <UserDashboard />
+              <ProtectedRoutes>
+                <UserDashboard />
+              </ProtectedRoutes>
             </MainLayout>
           }
         />
@@ -107,7 +112,9 @@ const AppRoutes = () => {
           path="/favorites"
           element={
             <MainLayout>
-              <Favorites />
+              <ProtectedRoutes>
+                <Favorites />
+              </ProtectedRoutes>
             </MainLayout>
           }
         />
@@ -116,19 +123,21 @@ const AppRoutes = () => {
           path="/cab-booking"
           element={
             <MainLayout>
-              <CabBooking />
+              <ProtectedRoutes>
+                <CabBooking />
+              </ProtectedRoutes>
             </MainLayout>
           }
         />
 
-        <Route
+        {/* <Route
           path="/weather"
           element={
             <MainLayout>
               <WeatherPage />
             </MainLayout>
           }
-        />
+        /> */}
 
         <Route
           path="/assistant"
@@ -153,45 +162,77 @@ const AppRoutes = () => {
         <Route
           path="/admin"
           element={
-            <AdminLayout>
-              <AdminDashboard />
-            </AdminLayout>
+            <ProtectedRoutes adminOnly>
+              <AdminLayout>
+                <AdminDashboard />
+              </AdminLayout>
+            </ProtectedRoutes>
           }
         />
 
         <Route
           path="/admin/places"
           element={
-            <AdminLayout>
-              <AddTouristPlace />
-            </AdminLayout>
+            <ProtectedRoutes adminOnly>
+              <AdminLayout>
+                <AddTouristPlace />
+              </AdminLayout>
+            </ProtectedRoutes>
           }
         />
 
         <Route
           path="/admin/bookings"
           element={
-            <AdminLayout>
-              <BookingManagement />
-            </AdminLayout>
+            <ProtectedRoutes adminOnly>
+              <AdminLayout>
+                <BookingManagement />
+              </AdminLayout>
+            </ProtectedRoutes>
           }
         />
 
         <Route
           path="/admin/users"
           element={
-            <AdminLayout>
-              <UserManagement />
-            </AdminLayout>
+            <ProtectedRoutes adminOnly>
+              <AdminLayout>
+                <UserManagement />
+              </AdminLayout>
+            </ProtectedRoutes>
           }
         />
 
         <Route
           path="/admin/reviews"
           element={
-            <AdminLayout>
-              <ReviewsManagement />
-            </AdminLayout>
+            <ProtectedRoutes adminOnly>
+              <AdminLayout>
+                <ReviewsManagement />
+              </AdminLayout>
+            </ProtectedRoutes>
+          }
+        />
+
+        <Route
+          path="/admin/cabs"
+          element={
+            <ProtectedRoutes adminOnly>
+              <AdminLayout>
+                <CabManagement />
+              </AdminLayout>
+            </ProtectedRoutes>
+          }
+        />
+
+        <Route
+          path="/admin/revenue"
+          element={
+            <ProtectedRoutes adminOnly>
+              <AdminLayout>
+                <RevenueDashboard />
+              </AdminLayout>
+            </ProtectedRoutes>
           }
         />
 

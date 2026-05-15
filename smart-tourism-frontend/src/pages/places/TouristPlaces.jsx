@@ -1,99 +1,146 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
+import { useSearchParams } from "react-router-dom";
+import { FaSearch, FaTimes } from "react-icons/fa";
 import axiosInstance from "../../api/axiosInstance";
+import PlaceCard from "../../components/cards/PlaceCard";
 
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  Form,
-} from "react-bootstrap";
-
-import { Link } from "react-router-dom";
-
-import { motion } from "framer-motion";
+const getPlacesFromResponse = (data) => {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.results)) return data.results;
+  if (Array.isArray(data?.data)) return data.data;
+  return [];
+};
 
 const TouristPlaces = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [places, setPlaces] = useState([]);
-  const [search, setSearch] = useState("");
+  const [city, setCity] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const search = searchParams.get("search") || "";
 
   useEffect(() => {
+    const fetchPlaces = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const response = await axiosInstance.get("places/");
+        setPlaces(getPlacesFromResponse(response.data));
+      } catch (fetchError) {
+        console.log(fetchError);
+        setError("Places could not be loaded. Please check the server and try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPlaces();
   }, []);
 
-  const fetchPlaces = async () => {
-    try {
-      const response = await axiosInstance.get(
-        "places/"
-      );
+  const cities = useMemo(() => {
+    const uniqueCities = places
+      .map((place) => place.city)
+      .filter(Boolean)
+      .sort((first, second) => first.localeCompare(second));
 
-      setPlaces(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    return ["all", ...new Set(uniqueCities)];
+  }, [places]);
+
+  const filteredPlaces = places.filter((place) => {
+    const searchText = `${place.name} ${place.city || ""} ${place.short_desc || ""}`
+      .toLowerCase();
+    const matchesSearch = searchText.includes(search.toLowerCase());
+    const matchesCity = city === "all" || place.city === city;
+    return matchesSearch && matchesCity;
+  });
+
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchParams(value ? { search: value } : {});
   };
 
-  const filteredPlaces = places.filter((place) =>
-    place.name
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
+  const clearFilters = () => {
+    setCity("all");
+    setSearchParams({});
+  };
 
   return (
-    <Container className="py-5">
-      <h1 className="mb-4 text-center">
-        Tourist Places
-      </h1>
-
-      {/* Search */}
-      <Form className="mb-5">
-        <Form.Control
-          type="text"
-          placeholder="Search tourist places..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </Form>
-
-      {/* Cards */}
-      <Row>
-        {filteredPlaces.map((place) => (
-          <Col md={4} className="mb-4" key={place.id}>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-            >
-              <Card className="shadow-lg border-0 rounded-4">
-                <Card.Img
-                  variant="top"
-                  src={place.image}
-                  style={{
-                    height: "250px",
-                    objectFit: "cover",
-                  }}
-                />
-
-                <Card.Body>
-                  <Card.Title>
-                    {place.name}
-                  </Card.Title>
-
-                  <Card.Text>
-                    {place.description.slice(0, 100)}
-                  </Card.Text>
-
-                  <Link to={`/place/${place.id}`}>
-                    <Button variant="dark">
-                      View Details
-                    </Button>
-                  </Link>
-                </Card.Body>
-              </Card>
-            </motion.div>
+    <section className="section-band">
+      <Container>
+        <Row className="align-items-end mb-4 g-3">
+          <Col lg={7}>
+            <span className="section-eyebrow">Explore destinations</span>
+            <h1 className="section-title">Tourist places</h1>
+            <p className="section-copy">
+              Search destinations, narrow by city, and open the places that fit
+              your travel plan.
+            </p>
           </Col>
-        ))}
-      </Row>
-    </Container>
+
+          <Col lg={5}>
+            <div className="search-panel">
+              <Row className="g-2">
+                <Col md={7}>
+                  <div className="position-relative">
+                    <FaSearch className="position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary" />
+                    <Form.Control
+                      type="search"
+                      value={search}
+                      onChange={handleSearchChange}
+                      placeholder="Search places"
+                      className="ps-5"
+                      aria-label="Search places"
+                    />
+                  </div>
+                </Col>
+
+                <Col md={5}>
+                  <Form.Select
+                    value={city}
+                    onChange={(event) => setCity(event.target.value)}
+                    aria-label="Filter by city"
+                  >
+                    {cities.map((cityName) => (
+                      <option value={cityName} key={cityName}>
+                        {cityName === "all" ? "All cities" : cityName}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
+              </Row>
+            </div>
+          </Col>
+        </Row>
+
+        {error ? (
+          <Alert variant="warning">{error}</Alert>
+        ) : null}
+
+        {loading ? (
+          <div className="loading-wrap">
+            <Spinner animation="border" role="status" />
+          </div>
+        ) : filteredPlaces.length ? (
+          <Row className="g-4">
+            {filteredPlaces.map((place) => (
+              <Col md={6} lg={4} key={place.id || place.slug}>
+                <PlaceCard place={place} />
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <div className="empty-state">
+            <h2 className="h4 text-dark">No places found</h2>
+            <p className="mb-3">Try a different search term or remove filters.</p>
+            <Button type="button" className="btn-outline-soft" onClick={clearFilters}>
+              <FaTimes className="me-2" />
+              Clear filters
+            </Button>
+          </div>
+        )}
+      </Container>
+    </section>
   );
 };
 

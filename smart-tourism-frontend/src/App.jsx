@@ -1,5 +1,7 @@
 import AppRoutes from "./routes/AppRoutes";
 
+import AuthProvider from "./context/AuthContext";
+
 // Toast Notifications
 import {
   ToastContainer,
@@ -7,17 +9,29 @@ import {
 
 import "react-toastify/dist/ReactToastify.css";
 
-function App() {
-  return (
-    <>
+// Floating AI Chat
+// import FloatingAIChat from "./components/chatbot/FloatingAIChat";
 
-      {/* Routes */}
+function App() {
+
+  return (
+
+    <AuthProvider>
+
+      {/* Application Routes */}
       <AppRoutes />
 
-      {/* Toast Notification */}
-      <ToastContainer position="top-right" />
+      {/* Global Floating AI Assistant */}
+      {/* <FloatingAIChat /> */}
 
-    </>
+      {/* Toast Notifications */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+      />
+
+    </AuthProvider>
+
   );
 }
 

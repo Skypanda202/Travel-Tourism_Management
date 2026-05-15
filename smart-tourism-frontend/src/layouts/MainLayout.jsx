@@ -3,13 +3,11 @@ import Footer from "../components/footer/Footer";
 
 const MainLayout = ({ children }) => {
   return (
-    <>
+    <div className="app-shell">
       <NavigationBar />
-
-      <main>{children}</main>
-
+      <main className="app-main">{children}</main>
       <Footer />
-    </>
+    </div>
   );
 };
 
