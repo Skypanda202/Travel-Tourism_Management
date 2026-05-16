@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import axiosInstance from "../../api/axiosInstance";
+import GoogleLoginButton from "../../components/auth/GoogleLoginButton";
 import AuthContext from "../../context/authContextValue";
 
 const schema = yup.object({
@@ -42,6 +43,15 @@ const Login = () => {
       console.log(error);
       toast.error("Invalid email or password");
     }
+  };
+
+  const handleAuthSuccess = (data) => {
+    const accessToken = data.access || data.access_token;
+    const decodedUser = login(accessToken);
+    const isAdmin = decodedUser.is_admin || decodedUser.role === "admin";
+
+    toast.success("Login successful");
+    navigate(isAdmin ? "/admin/places" : "/dashboard");
   };
 
   return (
@@ -89,6 +99,9 @@ const Login = () => {
               {isSubmitting ? "Logging in..." : "Login"}
             </Button>
           </Form>
+
+          <div className="my-3 text-center section-copy">or</div>
+          <GoogleLoginButton onSuccess={handleAuthSuccess} />
 
           <p className="section-copy text-center mt-4 mb-0">
             New here? <Link to="/register">Create an account</Link>

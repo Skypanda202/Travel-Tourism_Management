@@ -46,6 +46,16 @@ const AdminSidebar = () => {
 
         <li className="mb-4">
           <Link
+            to="/admin/places/add"
+            className="text-light text-decoration-none"
+          >
+            <FaMapMarkedAlt className="me-2" />
+            Add Place
+          </Link>
+        </li>
+
+        <li className="mb-4">
+          <Link
             to="/admin/bookings"
             className="text-light text-decoration-none"
           >

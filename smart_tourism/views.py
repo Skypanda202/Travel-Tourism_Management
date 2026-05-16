@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from apps.users.models import VisitorProfile
+from apps.users.views.auth_views import send_verification_email
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
@@ -42,7 +44,13 @@ def register(request):
     )
 
     VisitorProfile.objects.get_or_create(user=user)
+    verification_url, email_sent = send_verification_email(request, user)
 
-    return Response({
-        "message": "User registered successfully"
-    }, status=201)
+    data = {
+        "message": "User registered successfully. Please verify your email.",
+        "email_sent": email_sent,
+    }
+    if settings.DEBUG:
+        data["verification_url"] = verification_url
+
+    return Response(data, status=201)

@@ -3,6 +3,10 @@ Smart Tourism — Auth Views
 Login, Register, Logout, Password Change, Token Refresh
 """
 import logging
+import requests
+from django.conf import settings
+from django.core.mail import send_mail
+from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 from django.utils import timezone
 from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
@@ -23,6 +27,32 @@ from apps.users.serializers import (
 from smart_tourism.exceptions import success_response, error_response, created_response
 
 logger = logging.getLogger(__name__)
+email_verification_signer = TimestampSigner(salt="smart-tourism-email-verification")
+
+
+def build_email_verification_url(request, user):
+    token = email_verification_signer.sign(str(user.pk))
+    frontend_url = getattr(settings, "FRONTEND_URL", "http://localhost:5173").rstrip("/")
+    return f"{frontend_url}/verify-email?token={token}"
+
+
+def send_verification_email(request, user):
+    verification_url = build_email_verification_url(request, user)
+    subject = "Verify your Smart Tourism account"
+    message = (
+        f"Hello {user.full_name},\n\n"
+        "Please verify your Smart Tourism account using this link:\n"
+        f"{verification_url}\n\n"
+        "If you did not create this account, you can ignore this email."
+    )
+    sent = send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        fail_silently=True,
+    )
+    return verification_url, bool(sent)
 
 
 class LoginView(TokenObtainPairView):
@@ -69,15 +99,140 @@ class RegisterView(generics.CreateAPIView):
 
         # Generate tokens immediately
         refresh = RefreshToken.for_user(user)
+        verification_url, email_sent = send_verification_email(request, user)
         logger.info("New visitor registered: %s", user.email)
 
-        return Response({
+        response_data = {
             'success':       True,
-            'message':       'Registration successful. Welcome!',
+            'message':       'Registration successful. Please verify your email.',
             'access_token':  str(refresh.access_token),
             'refresh_token': str(refresh),
+            'email_sent':    email_sent,
             'user':          UserDetailSerializer(user, context={'request': request}).data,
-        }, status=status.HTTP_201_CREATED)
+        }
+        if settings.DEBUG:
+            response_data['verification_url'] = verification_url
+
+        return Response(response_data, status=status.HTTP_201_CREATED)
+
+
+class VerifyEmailView(APIView):
+    """
+    POST /api/v1/auth/verify-email/
+    Body: { "token": "signed-token" }
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        token = request.data.get("token")
+        if not token:
+            return error_response("Verification token is required.")
+
+        try:
+            user_id = email_verification_signer.unsign(token, max_age=60 * 60 * 24)
+            user = User.objects.get(pk=user_id)
+        except SignatureExpired:
+            return error_response("Verification link has expired.", status_code=status.HTTP_400_BAD_REQUEST)
+        except (BadSignature, User.DoesNotExist):
+            return error_response("Invalid verification token.", status_code=status.HTTP_400_BAD_REQUEST)
+
+        user.is_verified = True
+        user.email_verified_at = timezone.now()
+        user.save(update_fields=["is_verified", "email_verified_at", "updated_at"])
+        return success_response(
+            data=UserDetailSerializer(user, context={"request": request}).data,
+            message="Email verified successfully.",
+        )
+
+
+class ResendVerificationEmailView(APIView):
+    """
+    POST /api/v1/auth/resend-verification/
+    Sends another verification link to the logged-in user.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if request.user.is_verified:
+            return success_response(message="Your email is already verified.")
+
+        verification_url, email_sent = send_verification_email(request, request.user)
+        data = {"email_sent": email_sent}
+        if settings.DEBUG:
+            data["verification_url"] = verification_url
+        return success_response(data=data, message="Verification email sent.")
+
+
+class GoogleLoginView(APIView):
+    """
+    POST /api/v1/auth/google/
+    Body: { "credential": "google-id-token", "role": "visitor|admin" }
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        credential = request.data.get("credential")
+        requested_role = request.data.get("role", "visitor")
+        if requested_role not in {"visitor", "admin"}:
+            requested_role = "visitor"
+
+        if not credential:
+            return error_response("Google credential is required.")
+
+        try:
+            google_response = requests.get(
+                "https://oauth2.googleapis.com/tokeninfo",
+                params={"id_token": credential},
+                timeout=8,
+            )
+            google_response.raise_for_status()
+            profile = google_response.json()
+        except requests.RequestException as exc:
+            logger.warning("Google token verification failed: %s", exc)
+            return error_response("Could not verify Google account.", status_code=status.HTTP_401_UNAUTHORIZED)
+
+        client_id = getattr(settings, "GOOGLE_CLIENT_ID", "")
+        if client_id and profile.get("aud") != client_id:
+            return error_response("Google token audience does not match this app.", status_code=status.HTTP_401_UNAUTHORIZED)
+
+        email = profile.get("email")
+        if not email or profile.get("email_verified") not in ("true", True):
+            return error_response("Google email is not verified.", status_code=status.HTTP_401_UNAUTHORIZED)
+
+        first_name = profile.get("given_name", "")
+        last_name = profile.get("family_name", "")
+        user, created = User.objects.get_or_create(
+            email=email,
+            defaults={
+                "username": email,
+                "first_name": first_name,
+                "last_name": last_name,
+                "role": requested_role,
+                "is_verified": True,
+                "email_verified_at": timezone.now(),
+            },
+        )
+
+        if created:
+            from apps.users.models import VisitorProfile
+            if user.role == "visitor":
+                VisitorProfile.objects.get_or_create(user=user)
+            user.set_unusable_password()
+            user.save()
+        elif not user.is_verified:
+            user.is_verified = True
+            user.email_verified_at = timezone.now()
+            user.save(update_fields=["is_verified", "email_verified_at", "updated_at"])
+
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "success": True,
+            "message": "Google login successful.",
+            "access_token": str(refresh.access_token),
+            "refresh_token": str(refresh),
+            "token_type": "Bearer",
+            "user": UserDetailSerializer(user, context={"request": request}).data,
+        }, status=status.HTTP_200_OK)
 
 
 class LogoutView(APIView):

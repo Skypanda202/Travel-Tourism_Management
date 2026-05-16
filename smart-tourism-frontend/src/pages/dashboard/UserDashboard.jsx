@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Alert, Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import { FaCalendarAlt, FaHeart, FaMapMarkedAlt, FaStar } from "react-icons/fa";
 import axiosInstance from "../../api/axiosInstance";
+import AuthContext from "../../context/authContextValue";
 
 const statCards = [
   { key: "total_bookings", label: "Total bookings", icon: FaCalendarAlt },
@@ -12,6 +14,7 @@ const statCards = [
 ];
 
 const UserDashboard = () => {
+  const { logout } = useContext(AuthContext);
   const [stats, setStats] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,6 +42,33 @@ const UserDashboard = () => {
 
     fetchDashboard();
   }, []);
+
+  const resendVerification = async () => {
+    try {
+      await axiosInstance.post("resend-verification/");
+      toast.success("Verification email sent");
+    } catch (verifyError) {
+      console.log(verifyError);
+      toast.error("Could not send verification email");
+    }
+  };
+
+  const deleteAccount = async () => {
+    const confirmed = window.confirm("Delete your account? You will be logged out and your account will be deactivated.");
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await axiosInstance.delete("users/delete-account/");
+      logout();
+      toast.success("Account deactivated");
+      window.location.href = "/";
+    } catch (deleteError) {
+      console.log(deleteError);
+      toast.error("Could not delete your account");
+    }
+  };
 
   if (loading) {
     return (
@@ -73,6 +103,14 @@ const UserDashboard = () => {
         </Row>
 
         {error ? <Alert variant="warning">{error}</Alert> : null}
+        {profile && !profile.is_verified ? (
+          <Alert variant="warning" className="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <span>Please verify your email to keep your account secure.</span>
+            <Button className="btn-outline-soft btn-sm" onClick={resendVerification}>
+              Resend email
+            </Button>
+          </Alert>
+        ) : null}
 
         <Row className="g-4">
           {statCards.map(({ key, label, icon: Icon }) => (
@@ -102,6 +140,16 @@ const UserDashboard = () => {
               Book cab
             </Button>
           </div>
+        </div>
+
+        <div className="detail-panel mt-4">
+          <h2 className="h4 fw-bold">Account controls</h2>
+          <p className="section-copy mb-3">
+            Deleting your account deactivates login access while preserving booking and review history for admin records.
+          </p>
+          <Button variant="danger" onClick={deleteAccount}>
+            Delete my account
+          </Button>
         </div>
       </Container>
     </section>

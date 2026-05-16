@@ -19,6 +19,7 @@ import PlaceDetails from "../pages/places/PlaceDetails";
 // Authentication
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import VerifyEmail from "../pages/auth/VerifyEmail";
 
 // User Dashboard
 import UserDashboard from "../pages/dashboard/UserDashboard";
@@ -39,6 +40,7 @@ import MapPage from "../pages/maps/MapPage";
 // Admin Pages
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AddTouristPlace from "../pages/admin/AddTouristPlace";
+import ManagePlaces from "../pages/admin/ManagePlaces";
 import BookingManagement from "../pages/admin/BookingManagement";
 import UserManagement from "../pages/admin/UserManagement";
 import ReviewsManagement from "../pages/admin/ReviewsManagement";
@@ -109,6 +111,15 @@ const AppRoutes = () => {
         />
 
         <Route
+          path="/verify-email"
+          element={
+            <MainLayout>
+              <VerifyEmail />
+            </MainLayout>
+          }
+        />
+
+        <Route
           path="/favorites"
           element={
             <MainLayout>
@@ -172,6 +183,28 @@ const AppRoutes = () => {
 
         <Route
           path="/admin/places"
+          element={
+            <ProtectedRoutes adminOnly>
+              <AdminLayout>
+                <ManagePlaces />
+              </AdminLayout>
+            </ProtectedRoutes>
+          }
+        />
+
+        <Route
+          path="/admin/places/add"
+          element={
+            <ProtectedRoutes adminOnly>
+              <AdminLayout>
+                <AddTouristPlace />
+              </AdminLayout>
+            </ProtectedRoutes>
+          }
+        />
+
+        <Route
+          path="/admin/places/:slug/edit"
           element={
             <ProtectedRoutes adminOnly>
               <AdminLayout>

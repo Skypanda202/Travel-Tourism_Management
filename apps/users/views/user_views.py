@@ -157,3 +157,12 @@ class VisitorProfileViewSet(viewsets.GenericViewSet):
             'saved_places':      Favorite.objects.filter(user=user).count(),
         }
         return success_response(data=stats)
+
+    @action(detail=False, methods=['delete'], url_path='delete-account')
+    def delete_account(self, request):
+        """Authenticated users can deactivate their own account."""
+        user = request.user
+        user.is_active = False
+        user.save(update_fields=['is_active', 'updated_at'])
+        logger.info("User self-deleted account: %s", user.email)
+        return success_response(message="Your account has been deactivated.")

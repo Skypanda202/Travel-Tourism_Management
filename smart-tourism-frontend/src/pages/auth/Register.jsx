@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axiosInstance from "../../api/axiosInstance";
+import GoogleLoginButton from "../../components/auth/GoogleLoginButton";
+import AuthContext from "../../context/authContextValue";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,7 +29,7 @@ const Register = () => {
     try {
       setSubmitting(true);
       await axiosInstance.post("register/", formData);
-      toast.success("Account created. Please login.");
+      toast.success("Account created. Please check your email to verify it.");
       navigate("/login");
     } catch (error) {
       console.log(error);
@@ -34,6 +37,15 @@ const Register = () => {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleGoogleSuccess = (data) => {
+    const accessToken = data.access || data.access_token;
+    const decodedUser = login(accessToken);
+    const isAdmin = decodedUser.is_admin || decodedUser.role === "admin";
+
+    toast.success("Google account connected");
+    navigate(isAdmin ? "/admin/places" : "/dashboard");
   };
 
   return (
@@ -91,6 +103,12 @@ const Register = () => {
               {submitting ? "Creating account..." : "Create account"}
             </Button>
           </Form>
+
+          <div className="my-3 text-center section-copy">or</div>
+          <GoogleLoginButton
+            label="Register with Google"
+            onSuccess={handleGoogleSuccess}
+          />
 
           <p className="section-copy text-center mt-4 mb-0">
             Already have an account? <Link to="/login">Login</Link>

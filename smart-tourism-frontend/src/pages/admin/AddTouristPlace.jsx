@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axiosInstance from "../../api/axiosInstance";
 
@@ -66,6 +67,9 @@ const initialFormData = {
 };
 
 const AddTouristPlace = () => {
+  const navigate = useNavigate();
+  const { slug } = useParams();
+  const isEditMode = Boolean(slug);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [locationSearch, setLocationSearch] = useState("");
@@ -91,6 +95,54 @@ const AddTouristPlace = () => {
 
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if (!slug) {
+      return;
+    }
+
+    const fetchPlace = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.get(`places/${slug}/`);
+        const place = response.data.data || response.data;
+        const nextPosition = {
+          lat: Number(place.latitude),
+          lon: Number(place.longitude),
+        };
+
+        setFormData({
+          name: place.name || "",
+          short_desc: place.short_desc || "",
+          description: place.description || "",
+          category_id: place.category?.id || place.category || "",
+          address: place.address || "",
+          city: place.city || "",
+          state: place.state || "Odisha",
+          country: place.country || "India",
+          latitude: place.latitude || "",
+          longitude: place.longitude || "",
+          entry_fee: place.entry_fee || "0",
+          opening_time: place.opening_time || "",
+          closing_time: place.closing_time || "",
+          open_days: place.open_days || "",
+          best_time_to_visit: place.best_time_to_visit || "",
+          cover_image: null,
+        });
+        setMapCenter(nextPosition);
+        setMarkerPosition(nextPosition);
+        setPreview(place.cover_image_url || null);
+        setLocationSearch(place.address || place.name || "");
+      } catch (error) {
+        console.log(error);
+        toast.error("Could not load place details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlace();
+  }, [slug]);
 
   const getMapUrl = () => {
     const lat = Number(markerPosition?.lat || mapCenter.lat);
@@ -214,11 +266,15 @@ const AddTouristPlace = () => {
     });
 
     try {
-      const response = await axiosInstance.post("places/", data, {
+      const response = await axiosInstance[isEditMode ? "patch" : "post"](
+        isEditMode ? `places/${slug}/` : "places/",
+        data,
+        {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      });
+        },
+      );
 
       const createdPlace = response.data.data || response.data;
       const placeSlug = createdPlace.slug;
@@ -234,7 +290,7 @@ const AddTouristPlace = () => {
         });
       }
 
-      toast.success("Tourist place added successfully");
+      toast.success(isEditMode ? "Tourist place updated successfully" : "Tourist place added successfully");
       setFormData(initialFormData);
       setPreview(null);
       setGalleryImages([]);
@@ -243,12 +299,15 @@ const AddTouristPlace = () => {
       setMapCenter(defaultMapCenter);
       setLocationSearch("");
       setLocationResults([]);
+      if (isEditMode) {
+        navigate("/admin/places");
+      }
     } catch (error) {
       console.log(error);
       const message =
         error.response?.data?.error?.message ||
         error.response?.data?.message ||
-        "Failed to add tourist place";
+        isEditMode ? "Failed to update tourist place" : "Failed to add tourist place";
       toast.error(message);
     } finally {
       setLoading(false);
@@ -258,7 +317,9 @@ const AddTouristPlace = () => {
   return (
     <div className="detail-panel">
       <span className="section-eyebrow">Admin details</span>
-      <h1 className="h2 fw-bold mt-2 mb-2">Add tourist place</h1>
+      <h1 className="h2 fw-bold mt-2 mb-2">
+        {isEditMode ? "Edit tourist place" : "Add tourist place"}
+      </h1>
       <p className="section-copy mb-4">
         Fill the destination details below. Required fields match the backend
         place model so the record can be published immediately.
@@ -595,7 +656,7 @@ const AddTouristPlace = () => {
               Saving...
             </>
           ) : (
-            "Add place details"
+            isEditMode ? "Update place details" : "Add place details"
           )}
         </Button>
       </Form>

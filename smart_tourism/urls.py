@@ -7,7 +7,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenRefreshView
-from apps.users.views.auth_views import LoginView
+from apps.users.views.auth_views import (
+    GoogleLoginView,
+    LoginView,
+    ResendVerificationEmailView,
+    VerifyEmailView,
+)
 from .views import register
 urlpatterns = [
 
@@ -40,6 +45,9 @@ urlpatterns = [
         "api/login/",
         LoginView.as_view(),
     ),
+    path("api/google/", GoogleLoginView.as_view()),
+    path("api/verify-email/", VerifyEmailView.as_view()),
+    path("api/resend-verification/", ResendVerificationEmailView.as_view()),
 
     path(
         "api/token/refresh/",

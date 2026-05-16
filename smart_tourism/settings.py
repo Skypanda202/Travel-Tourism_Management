@@ -241,6 +241,7 @@ DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='noreply@smarttourism.com
 # EXTERNAL APIS
 # ============================================================
 GOOGLE_MAPS_API_KEY = config('GOOGLE_MAPS_API_KEY', default='')
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', default='')
 WEATHER_API_KEY = config('WEATHER_API_KEY', default='')
 WEATHER_API_URL = config('WEATHER_API_URL', default='https://api.openweathermap.org/data/2.5/weather')
 
