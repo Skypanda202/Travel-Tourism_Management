@@ -1,6 +1,6 @@
-# Kalahandi Smart Tourism
+# Smart Tourism
 
-A full-stack tourism management system for Kalahandi with a Django REST API and a React admin/visitor frontend. The app supports tourist place discovery, user dashboards, bookings, favorites, reviews, analytics, cab booking, email verification, Google login, and admin content management.
+A full-stack tourism management system for Tour and Travels with a Django REST API and a React admin/visitor frontend. The app supports tourist place discovery, user dashboards, bookings, favorites, reviews, analytics, cab booking, email verification, Google login, and admin content management.
 
 ## Tech Stack
 
