@@ -733,3 +733,133 @@ Traceback (most recent call last):
            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
 django.db.utils.OperationalError: no such table: django_celery_results_groupresult
 ERROR 2026-05-16 01:58:53,823 basehttp 10604 14668 "GET /admin/django_celery_results/groupresult/ HTTP/1.1" 500 212632
+ERROR 2026-05-16 19:14:28,101 exceptions 4312 10944 Unhandled exception: Invalid address ""
+Traceback (most recent call last):
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1836, in get_mailbox
+    token, value = get_name_addr(value)
+                   ~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1800, in get_name_addr
+    raise errors.HeaderParseError(
+        "expected name-addr but found '{}'".format(value))
+email.errors.HeaderParseError: expected name-addr but found ''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1839, in get_mailbox
+    token, value = get_addr_spec(value)
+                   ~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1677, in get_addr_spec
+    token, value = get_local_part(value)
+                   ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1485, in get_local_part
+    raise errors.HeaderParseError(
+        "expected local-part but found '{}'".format(value))
+email.errors.HeaderParseError: expected local-part but found ''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\message.py", line 86, in sanitize_address
+    token, rest = parser.get_mailbox(addr)
+                  ~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1841, in get_mailbox
+    raise errors.HeaderParseError(
+        "expected mailbox but found '{}'".format(value))
+email.errors.HeaderParseError: expected mailbox but found ''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\smart_tourism\views.py", line 47, in register
+    verification_url, email_sent = send_verification_email(request, user)
+                                   ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\users\views\auth_views.py", line 48, in send_verification_email
+    sent = send_mail(
+        subject,
+    ...<3 lines>...
+        fail_silently=True,
+    )
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\__init__.py", line 88, in send_mail
+    return mail.send()
+           ~~~~~~~~~^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 136, in send_messages
+    sent = self._send(message)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 149, in _send
+    from_email = sanitize_address(email_message.from_email, encoding)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\message.py", line 88, in sanitize_address
+    raise ValueError('Invalid address "%s"' % addr)
+ValueError: Invalid address ""
+ERROR 2026-05-16 19:14:28,420 log 4312 10944 Internal Server Error: /api/register/
+ERROR 2026-05-16 19:14:28,422 basehttp 4312 10944 "POST /api/register/ HTTP/1.1" 500 130
+ERROR 2026-05-16 19:15:00,842 exceptions 4312 2908 Unhandled exception: Invalid address ""
+Traceback (most recent call last):
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1836, in get_mailbox
+    token, value = get_name_addr(value)
+                   ~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1800, in get_name_addr
+    raise errors.HeaderParseError(
+        "expected name-addr but found '{}'".format(value))
+email.errors.HeaderParseError: expected name-addr but found ''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1839, in get_mailbox
+    token, value = get_addr_spec(value)
+                   ~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1677, in get_addr_spec
+    token, value = get_local_part(value)
+                   ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1485, in get_local_part
+    raise errors.HeaderParseError(
+        "expected local-part but found '{}'".format(value))
+email.errors.HeaderParseError: expected local-part but found ''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\message.py", line 86, in sanitize_address
+    token, rest = parser.get_mailbox(addr)
+                  ~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\email\_header_value_parser.py", line 1841, in get_mailbox
+    raise errors.HeaderParseError(
+        "expected mailbox but found '{}'".format(value))
+email.errors.HeaderParseError: expected mailbox but found ''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\users\views\auth_views.py", line 159, in post
+    verification_url, email_sent = send_verification_email(request, request.user)
+                                   ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\users\views\auth_views.py", line 48, in send_verification_email
+    sent = send_mail(
+        subject,
+    ...<3 lines>...
+        fail_silently=True,
+    )
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\__init__.py", line 88, in send_mail
+    return mail.send()
+           ~~~~~~~~~^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\message.py", line 301, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 136, in send_messages
+    sent = self._send(message)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 149, in _send
+    from_email = sanitize_address(email_message.from_email, encoding)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\core\mail\message.py", line 88, in sanitize_address
+    raise ValueError('Invalid address "%s"' % addr)
+ValueError: Invalid address ""
+ERROR 2026-05-16 19:15:00,885 log 4312 2908 Internal Server Error: /api/resend-verification/
+ERROR 2026-05-16 19:15:00,903 basehttp 4312 2908 "POST /api/resend-verification/ HTTP/1.1" 500 130
