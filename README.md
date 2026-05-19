@@ -60,6 +60,7 @@ Important backend environment variables:
 SECRET_KEY=django-secret-key
 DEBUG=True
 ALLOWED_HOSTS=127.0.0.1,localhost
+DATABASE_URL=postgresql://user:password@host:5432/database
 FRONTEND_URL=http://localhost:5173
 GOOGLE_CLIENT_ID=
 EMAIL_HOST=smtp.gmail.com

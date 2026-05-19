@@ -1,13 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.conf import settings
 
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from apps.users.models import VisitorProfile
 from apps.users.views.auth_views import send_verification_email
 
 @api_view(["POST"])
+@authentication_classes([])
 @permission_classes([AllowAny])
 def register(request):
     User = get_user_model()

@@ -10,6 +10,7 @@ from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 from django.utils import timezone
 from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import authentication_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -61,6 +62,7 @@ class LoginView(TokenObtainPairView):
     Returns access + refresh tokens with user info.
     """
     permission_classes = [AllowAny]
+    authentication_classes = []
     serializer_class   = CustomTokenObtainPairSerializer
 
     def post(self, request, *args, **kwargs):
@@ -90,6 +92,7 @@ class RegisterView(generics.CreateAPIView):
     Visitor self-registration.
     """
     permission_classes = [AllowAny]
+    authentication_classes = []
     serializer_class   = RegisterSerializer
 
     def create(self, request, *args, **kwargs):
@@ -122,6 +125,7 @@ class VerifyEmailView(APIView):
     Body: { "token": "signed-token" }
     """
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def post(self, request):
         token = request.data.get("token")
@@ -169,6 +173,7 @@ class GoogleLoginView(APIView):
     Body: { "credential": "google-id-token", "role": "visitor|admin" }
     """
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def post(self, request):
         credential = request.data.get("credential")
