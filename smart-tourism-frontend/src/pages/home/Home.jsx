@@ -28,7 +28,7 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             className="hero-content"
           >
-            <span className="hero-eyebrow">Kalahandi travel planner</span>
+            <span className="hero-eyebrow">Tour and Travel Planner</span>
 
             <h1 className="hero-title">Discover places worth slowing down for</h1>
 
