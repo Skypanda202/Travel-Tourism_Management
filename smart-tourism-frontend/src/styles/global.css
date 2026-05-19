@@ -273,6 +273,22 @@ img {
   padding: 28px;
 }
 
+.profile-summary {
+  padding: 18px;
+  text-align: left;
+}
+
+.profile-summary strong,
+.profile-summary span {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.profile-summary span {
+  margin-top: 4px;
+  color: var(--st-muted);
+}
+
 .auth-page {
   padding: 64px 0;
 }

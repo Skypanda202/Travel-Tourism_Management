@@ -61,7 +61,8 @@ class TravelPlanDetailSerializer(serializers.ModelSerializer):
 class TravelPlanCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model  = TravelPlan
-        fields = ['title', 'description', 'start_date', 'end_date', 'budget', 'currency', 'visibility']
+        fields = ['id', 'title', 'description', 'start_date', 'end_date', 'budget', 'currency', 'visibility']
+        read_only_fields = ['id']
 
     def validate(self, attrs):
         if attrs['end_date'] < attrs['start_date']:

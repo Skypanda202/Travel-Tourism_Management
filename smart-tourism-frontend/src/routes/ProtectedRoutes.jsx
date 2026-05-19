@@ -1,22 +1,19 @@
 import { Navigate } from "react-router-dom";
+import { getStoredUser, isAdminUser } from "../utils/auth";
 
 const ProtectedRoutes = ({
   children,
   adminOnly = false,
 }) => {
   const token = localStorage.getItem("token");
-  const userRole = localStorage.getItem("role");
-  const isAdmin = localStorage.getItem("is_admin") === "true";
+  const user = getStoredUser();
+  const isAdmin = isAdminUser(user);
 
-  if (!token) {
+  if (!token || !user) {
     return <Navigate to="/login" />;
   }
 
-  if (
-    adminOnly &&
-    userRole !== "admin" &&
-    !isAdmin
-  ) {
+  if (adminOnly && !isAdmin) {
     return <Navigate to="/" />;
   }
 

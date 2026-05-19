@@ -93,6 +93,9 @@ const UserDashboard = () => {
           </Col>
 
           <Col lg={4} className="text-lg-end">
+            <Button as={Link} to="/profile" className="btn-outline-soft me-2 mb-2">
+              Edit profile
+            </Button>
             <Button as={Link} to="/places" className="btn-primary-soft me-2 mb-2">
               Explore places
             </Button>
@@ -138,6 +141,9 @@ const UserDashboard = () => {
             </Button>
             <Button as={Link} to="/cab-booking" className="btn-outline-soft">
               Book cab
+            </Button>
+            <Button as={Link} to="/profile" className="btn-outline-soft">
+              Update profile
             </Button>
           </div>
         </div>

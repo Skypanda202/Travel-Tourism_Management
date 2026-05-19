@@ -1,5 +1,6 @@
 """Smart Tourism — Bookings Views."""
 import logging
+from decimal import Decimal
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters
@@ -54,7 +55,7 @@ class BookingViewSet(viewsets.ModelViewSet):
         place = serializer.validated_data['place']
         # Price calculation
         adult_fee    = place.entry_fee
-        children_fee = adult_fee * 0.5    # 50% for children
+        children_fee = adult_fee * Decimal('0.5')    # 50% for children
         num_adults   = serializer.validated_data.get('num_adults', 1)
         num_children = serializer.validated_data.get('num_children', 0)
         total        = (adult_fee * num_adults) + (children_fee * num_children)

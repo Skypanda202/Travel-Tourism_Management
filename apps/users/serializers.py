@@ -17,11 +17,14 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
+        is_admin = user.is_admin
         # Add custom claims
         token['email']      = user.email
         token['full_name']  = user.full_name
-        token['role']       = user.role
-        token['is_admin']   = user.is_admin
+        token['role']       = 'admin' if is_admin else user.role
+        token['is_admin']   = is_admin
+        token['is_staff']   = user.is_staff
+        token['is_superuser'] = user.is_superuser
         return token
 
     def validate(self, attrs):

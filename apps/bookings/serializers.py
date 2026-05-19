@@ -11,9 +11,10 @@ class BookingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Booking
         fields = [
-            'id', 'place', 'visit_date', 'num_adults', 'num_children',
-            'special_notes', 'currency',
+            'id', 'booking_ref', 'place', 'visit_date', 'num_adults', 'num_children',
+            'special_notes', 'currency', 'total_amount', 'status', 'payment_status',
         ]
+        read_only_fields = ['id', 'booking_ref', 'total_amount', 'status', 'payment_status']
 
     def validate_visit_date(self, value):
         if value < timezone.now().date():

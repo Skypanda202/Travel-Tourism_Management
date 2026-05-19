@@ -24,6 +24,7 @@ import VerifyEmail from "../pages/auth/VerifyEmail";
 // User Dashboard
 import UserDashboard from "../pages/dashboard/UserDashboard";
 import Favorites from "../pages/dashboard/Favorites";
+import Profile from "../pages/dashboard/Profile";
 
 // Booking
 import CabBooking from "../pages/booking/CabBooking";
@@ -125,6 +126,17 @@ const AppRoutes = () => {
             <MainLayout>
               <ProtectedRoutes>
                 <Favorites />
+              </ProtectedRoutes>
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <MainLayout>
+              <ProtectedRoutes>
+                <Profile />
               </ProtectedRoutes>
             </MainLayout>
           }

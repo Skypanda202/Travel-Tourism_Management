@@ -1,5 +1,6 @@
 """Smart Tourism — Cabs Views."""
 import logging
+from decimal import Decimal, InvalidOperation
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -46,7 +47,7 @@ class CabBookingViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         cab_type    = serializer.validated_data['cab_type']
-        dist        = serializer.validated_data.get('distance_km', 0) or 0
+        dist        = serializer.validated_data.get('distance_km', Decimal('0')) or Decimal('0')
         dist_fare   = cab_type.price_per_km * dist
         total       = cab_type.base_fare + dist_fare
         booking = serializer.save(
@@ -87,8 +88,8 @@ class CabBookingViewSet(viewsets.ModelViewSet):
         """
         try:
             cab_type_id = request.data['cab_type_id']
-            distance_km = float(request.data['distance_km'])
-        except (KeyError, ValueError):
+            distance_km = Decimal(str(request.data['distance_km']))
+        except (KeyError, InvalidOperation):
             return error_response("Provide cab_type_id and distance_km.")
 
         try:

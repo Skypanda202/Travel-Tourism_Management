@@ -87,6 +87,19 @@ class Command(BaseCommand):
             admin.save()
             self.stdout.write(self.style.SUCCESS('✔ Admin user created: admin@smarttourism.com / Admin@1234'))
         else:
+            update_fields = []
+            admin_updates = {
+                'role': 'admin',
+                'is_staff': True,
+                'is_superuser': True,
+                'is_active': True,
+            }
+            for field, value in admin_updates.items():
+                if getattr(admin, field) != value:
+                    setattr(admin, field, value)
+                    update_fields.append(field)
+            if update_fields:
+                admin.save(update_fields=update_fields)
             self.stdout.write('  Admin user already exists.')
 
         # ── Sample visitor ─────────────────────────────────────────────────────

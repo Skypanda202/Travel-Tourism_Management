@@ -8,6 +8,7 @@ import * as yup from "yup";
 import axiosInstance from "../../api/axiosInstance";
 import GoogleLoginButton from "../../components/auth/GoogleLoginButton";
 import AuthContext from "../../context/authContextValue";
+import { clearAuthSession, isAdminUser } from "../../utils/auth";
 
 const schema = yup.object({
   email: yup.string().email("Enter a valid email").required("Email is required"),
@@ -28,27 +29,33 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
+      clearAuthSession();
+
       const response = await axiosInstance.post("login/", {
-        email: data.email,
+        email: data.email.trim().toLowerCase(),
         password: data.password,
       });
 
       const accessToken = response.data.access || response.data.access_token;
-      const decodedUser = login(accessToken);
-      const isAdmin = decodedUser.is_admin || decodedUser.role === "admin";
+      const decodedUser = login(accessToken, response.data.user);
+      const isAdmin = isAdminUser(decodedUser);
 
       toast.success("Login successful");
       navigate(isAdmin ? "/admin/places" : "/dashboard");
     } catch (error) {
       console.log(error);
-      toast.error("Invalid email or password");
+      toast.error(
+        error.response?.data?.message ||
+          error.response?.data?.detail ||
+          "Invalid email or password"
+      );
     }
   };
 
   const handleAuthSuccess = (data) => {
     const accessToken = data.access || data.access_token;
-    const decodedUser = login(accessToken);
-    const isAdmin = decodedUser.is_admin || decodedUser.role === "admin";
+    const decodedUser = login(accessToken, data.user);
+    const isAdmin = isAdminUser(decodedUser);
 
     toast.success("Login successful");
     navigate(isAdmin ? "/admin/places" : "/dashboard");

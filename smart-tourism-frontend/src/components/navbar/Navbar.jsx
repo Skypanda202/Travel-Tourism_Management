@@ -10,11 +10,12 @@ import {
   FaUserCircle,
 } from "react-icons/fa";
 import AuthContext from "../../context/authContextValue";
+import { isAdminUser } from "../../utils/auth";
 
 const NavigationBar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  const isAdmin = user?.is_admin || user?.role === "admin";
+  const isAdmin = isAdminUser(user);
 
   const handleLogout = () => {
     logout();
@@ -77,6 +78,10 @@ const NavigationBar = () => {
                 <Nav.Link as={NavLink} to="/dashboard">
                   <FaUserCircle className="me-1" />
                   My account
+                </Nav.Link>
+
+                <Nav.Link as={NavLink} to="/profile">
+                  Profile
                 </Nav.Link>
 
                 <Nav.Link as={NavLink} to="/favorites">

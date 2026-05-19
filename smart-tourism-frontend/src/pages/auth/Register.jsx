@@ -1,10 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axiosInstance from "../../api/axiosInstance";
 import GoogleLoginButton from "../../components/auth/GoogleLoginButton";
 import AuthContext from "../../context/authContextValue";
+import { clearAuthSession, isAdminUser } from "../../utils/auth";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Register = () => {
     password: "",
   });
   const [submitting, setSubmitting] = useState(false);
+  const submitInFlight = useRef(false);
 
   const handleChange = (event) => {
     setFormData({
@@ -26,23 +28,42 @@ const Register = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (submitInFlight.current) {
+      return;
+    }
+
+    const payload = {
+      ...formData,
+      name: formData.name.trim(),
+      email: formData.email.trim().toLowerCase(),
+    };
+
     try {
+      submitInFlight.current = true;
       setSubmitting(true);
-      await axiosInstance.post("register/", formData);
+      clearAuthSession();
+
+      await axiosInstance.post("register/", payload);
       toast.success("Account created. Please check your email to verify it.");
       navigate("/login");
     } catch (error) {
       console.log(error);
-      toast.error(error.response?.data?.error || "Registration failed");
+      toast.error(
+        error.response?.data?.error ||
+          error.response?.data?.message ||
+          error.response?.data?.detail ||
+          "Registration failed"
+      );
     } finally {
+      submitInFlight.current = false;
       setSubmitting(false);
     }
   };
 
   const handleGoogleSuccess = (data) => {
     const accessToken = data.access || data.access_token;
-    const decodedUser = login(accessToken);
-    const isAdmin = decodedUser.is_admin || decodedUser.role === "admin";
+    const decodedUser = login(accessToken, data.user);
+    const isAdmin = isAdminUser(decodedUser);
 
     toast.success("Google account connected");
     navigate(isAdmin ? "/admin/places" : "/dashboard");

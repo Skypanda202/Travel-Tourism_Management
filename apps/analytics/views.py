@@ -8,6 +8,7 @@ import logging
 from datetime import date, timedelta
 
 from django.db.models import Sum, Count, Avg
+from django.db.models.functions import ExtractMonth, ExtractYear
 from django.http import HttpResponse
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -139,7 +140,7 @@ class AnalyticsViewSet(viewsets.GenericViewSet):
         rows = (
             DailyAnalytics.objects
             .filter(date__year=year)
-            .extra(select={'month': "MONTH(date)"})
+            .annotate(month=ExtractMonth('date'))
             .values('month')
             .annotate(
                 total_visits=Sum('total_visits'),
@@ -179,7 +180,7 @@ class AnalyticsViewSet(viewsets.GenericViewSet):
         """
         rows = (
             DailyAnalytics.objects
-            .extra(select={'year': "YEAR(date)"})
+            .annotate(year=ExtractYear('date'))
             .values('year')
             .annotate(
                 total_visits=Sum('total_visits'),
@@ -238,13 +239,13 @@ class AnalyticsViewSet(viewsets.GenericViewSet):
         limit  = min(int(request.query_params.get('limit', 10)), 50)
 
         METRIC_MAP = {
-            'bookings': 'total_bookings',
+            'bookings': 'bookings',
             'views':    'views',
             'revenue':  'revenue',
             'reviews':  'reviews',
             'favorites': 'favorites',
         }
-        agg_field = METRIC_MAP.get(metric, 'total_bookings')
+        agg_field = METRIC_MAP.get(metric, 'bookings')
 
         rows = (
             PlaceAnalytics.objects

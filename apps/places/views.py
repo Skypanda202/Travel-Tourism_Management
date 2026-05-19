@@ -99,6 +99,10 @@ class TouristPlaceViewSet(viewsets.ModelViewSet):
         serializer.save()
         logger.info("Place updated: %s", serializer.instance.name)
 
+    def retrieve(self, request, *args, **kwargs):
+        serializer = self.get_serializer(self.get_object())
+        return success_response(data=serializer.data)
+
     # ── Custom actions ─────────────────────────────────────────────────────────
 
     @action(detail=True, methods=['get'], permission_classes=[AllowAny])

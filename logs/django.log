@@ -863,3 +863,394 @@ Traceback (most recent call last):
 ValueError: Invalid address ""
 ERROR 2026-05-16 19:15:00,885 log 4312 2908 Internal Server Error: /api/resend-verification/
 ERROR 2026-05-16 19:15:00,903 basehttp 4312 2908 "POST /api/resend-verification/ HTTP/1.1" 500 130
+ERROR 2026-05-19 22:11:23,293 exceptions 20244 4600 Unhandled exception: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\mixins.py", line 19, in create
+    self.perform_create(serializer)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\bookings\views.py", line 57, in perform_create
+    children_fee = adult_fee * 0.5    # 50% for children
+                   ~~~~~~~~~~^~~~~
+TypeError: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'
+ERROR 2026-05-19 22:11:23,298 log 20244 4600 Internal Server Error: /api/v1/bookings/
+ERROR 2026-05-19 22:11:29,319 exceptions 20244 4600 Unhandled exception: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\mixins.py", line 19, in create
+    self.perform_create(serializer)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\bookings\views.py", line 57, in perform_create
+    children_fee = adult_fee * 0.5    # 50% for children
+                   ~~~~~~~~~~^~~~~
+TypeError: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'
+ERROR 2026-05-19 22:11:29,320 log 20244 4600 Internal Server Error: /api/v1/bookings/
+ERROR 2026-05-19 22:11:39,737 exceptions 20244 4600 Unhandled exception: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\cabs\views.py", line 99, in estimate_fare
+    dist_fare  = cab.price_per_km * distance_km
+                 ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'
+ERROR 2026-05-19 22:11:39,740 log 20244 4600 Internal Server Error: /api/v1/cabs/bookings/estimate_fare/
+ERROR 2026-05-19 22:12:21,210 exceptions 20244 4600 Unhandled exception: no such function: MONTH
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such function: MONTH
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\analytics\views.py", line 163, in monthly
+    for row in rows:
+               ^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\query.py", line 400, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\query.py", line 210, in __iter__
+    for row in compiler.results_iter(
+               ~~~~~~~~~~~~~~~~~~~~~^
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1525, in results_iter
+    results = self.execute_sql(
+        MULTI, chunked_fetch=chunked_fetch, chunk_size=chunk_size
+    )
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1574, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such function: MONTH
+ERROR 2026-05-19 22:12:21,286 log 20244 4600 Internal Server Error: /api/v1/analytics/monthly/
+ERROR 2026-05-19 22:12:21,737 exceptions 20244 4600 Unhandled exception: no such function: YEAR
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such function: YEAR
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\analytics\views.py", line 197, in yearly
+    for row in rows:
+               ^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\query.py", line 400, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\query.py", line 210, in __iter__
+    for row in compiler.results_iter(
+               ~~~~~~~~~~~~~~~~~~~~~^
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1525, in results_iter
+    results = self.execute_sql(
+        MULTI, chunked_fetch=chunked_fetch, chunk_size=chunk_size
+    )
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1574, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such function: YEAR
+ERROR 2026-05-19 22:12:21,738 log 20244 4600 Internal Server Error: /api/v1/analytics/yearly/
+ERROR 2026-05-19 22:12:22,217 exceptions 20244 4600 Unhandled exception: Cannot resolve keyword 'total_bookings' into field. Choices are: bookings, date, favorites, id, place, place_id, revenue, reviews, views
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\analytics\views.py", line 252, in top_places
+    .annotate(total=Sum(agg_field))
+     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\query.py", line 1630, in annotate
+    return self._annotate(args, kwargs, select=True)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\query.py", line 1680, in _annotate
+    clone.query.add_annotation(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        annotation,
+        ^^^^^^^^^^^
+        alias,
+        ^^^^^^
+        select=select,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1194, in add_annotation
+    annotation = annotation.resolve_expression(self, allow_joins=True, reuse=None)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\aggregates.py", line 63, in resolve_expression
+    c = super().resolve_expression(query, allow_joins, reuse, summarize)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\expressions.py", line 1073, in resolve_expression
+    c.source_expressions[pos] = arg.resolve_expression(
+                                ~~~~~~~~~~~~~~~~~~~~~~^
+        query, allow_joins, reuse, summarize, for_save
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\expressions.py", line 895, in resolve_expression
+    return query.resolve_ref(self.name, allow_joins, reuse, summarize)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\sql\query.py", line 2010, in resolve_ref
+    join_info = self.setup_joins(
+        field_list, self.get_meta(), self.get_initial_alias(), can_reuse=reuse
+    )
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1863, in setup_joins
+    path, final_field, targets, rest = self.names_to_path(
+                                       ~~~~~~~~~~~~~~~~~~^
+        names[:pivot],
+        ^^^^^^^^^^^^^^
+    ...<2 lines>...
+        fail_on_missing=True,
+        ^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1768, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'total_bookings' into field. Choices are: bookings, date, favorites, id, place, place_id, revenue, reviews, views
+ERROR 2026-05-19 22:12:22,260 log 20244 4600 Internal Server Error: /api/v1/analytics/top-places/
+ERROR 2026-05-19 22:14:19,294 exceptions 15328 23496 Unhandled exception: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\utils\functional.py", line 32, in __call__
+    return self.__value__
+           ^^^^^^^^^^^^^^
+AttributeError: 'ChannelPromise' object has no attribute '__value__'. Did you mean: '__call__'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\transport\virtual\base.py", line 951, in create_channel
+    return self._avail_channels.pop()
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^
+IndexError: pop from empty list
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\connection.py", line 1003, in connect_check_health
+    sock = self._connect()
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\connection.py", line 1515, in _connect
+    raise err
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\connection.py", line 1499, in _connect
+    sock.connect(socket_address)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\connection.py", line 474, in _reraise_as_library_errors
+    yield
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\connection.py", line 461, in _ensure_connection
+    return retry_over_time(
+        self._connection_factory, self.recoverable_connection_errors,
+    ...<2 lines>...
+        callback, timeout=timeout
+    )
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\utils\functional.py", line 318, in retry_over_time
+    return fun(*args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\connection.py", line 941, in _connection_factory
+    self._connection = self._establish_connection()
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\connection.py", line 863, in _establish_connection
+    conn = self.transport.establish_connection()
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\transport\virtual\base.py", line 975, in establish_connection
+    self._avail_channels.append(self.create_channel(self))
+                                ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\transport\virtual\base.py", line 953, in create_channel
+    channel = self.Channel(connection)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\transport\redis.py", line 757, in __init__
+    self.client.ping()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\commands\core.py", line 1250, in ping
+    return self.execute_command("PING", **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\client.py", line 722, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\utils.py", line 236, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\connection.py", line 3041, in get_connection
+    connection.connect()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\connection.py", line 976, in connect
+    self.retry.call_with_retry(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        lambda: self.connect_check_health(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        lambda error: self.disconnect(error),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\connection.py", line 977, in <lambda>
+    lambda: self.connect_check_health(
+            ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        check_health=True, retry_socket_connect=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ),
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\redis\connection.py", line 1025, in connect_check_health
+    raise e
+redis.exceptions.ConnectionError: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\bookings\views.py", line 96, in cancel
+    booking.save()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\bookings\models.py", line 77, in save
+    super().save(*args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\base.py", line 891, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields=update_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\db\models\base.py", line 1012, in save_base
+    post_save.send(
+    ~~~~~~~~~~~~~~^
+        sender=origin,
+        ^^^^^^^^^^^^^^
+    ...<4 lines>...
+        using=using,
+        ^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\django\dispatch\dispatcher.py", line 189, in send
+    response = receiver(signal=self, sender=sender, **named)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\apps\bookings\signals.py", line 20, in booking_status_changed
+    notify_booking_cancelled.delay(instance.pk)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\celery\app\task.py", line 463, in delay
+    return self.apply_async(args, kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\celery\app\task.py", line 627, in apply_async
+    return app.send_task(
+           ~~~~~~~~~~~~~^
+        self.name, args, kwargs, task_id=task_id, producer=producer,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        **options
+        ^^^^^^^^^
+    )
+    ^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\celery\app\base.py", line 969, in send_task
+    amqp.send_task_message(P, name, message, **options)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\celery\app\amqp.py", line 559, in send_task_message
+    ret = producer.publish(
+        body,
+    ...<8 lines>...
+        **properties
+    )
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\messaging.py", line 190, in publish
+    return _publish(
+        body, priority, content_type, content_encoding,
+        headers, properties, routing_key, mandatory, immediate,
+        exchange_name, declare, timeout, confirm_timeout, retry, retry_policy
+    )
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\connection.py", line 558, in _ensured
+    return fun(*args, **kwargs)
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\messaging.py", line 200, in _publish
+    channel = self.channel
+              ^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\messaging.py", line 224, in _get_channel
+    channel = self._channel = channel()
+                              ~~~~~~~^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\utils\functional.py", line 34, in __call__
+    value = self.__value__ = self.__contract__()
+                             ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\messaging.py", line 240, in <lambda>
+    channel = ChannelPromise(lambda: connection.default_channel)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\connection.py", line 960, in default_channel
+    self._ensure_connection(**conn_opts)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\connection.py", line 460, in _ensure_connection
+    with ctx():
+         ~~~^^
+  File "C:\Users\91637\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\91637\OneDrive\Documents\Akash Panda\Django Project\kalahandi-tourism\.venv\Lib\site-packages\kombu\connection.py", line 478, in _reraise_as_library_errors
+    raise ConnectionError(str(exc)) from exc
+kombu.exceptions.OperationalError: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+ERROR 2026-05-19 22:14:20,193 log 15328 23496 Internal Server Error: /api/v1/bookings/1/cancel/

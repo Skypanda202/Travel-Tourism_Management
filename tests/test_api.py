@@ -50,14 +50,16 @@ def visitor_user(db):
 
 @pytest.fixture
 def admin_client(api_client, admin_user):
-    api_client.force_authenticate(user=admin_user)
-    return api_client
+    client = APIClient()
+    client.force_authenticate(user=admin_user)
+    return client
 
 
 @pytest.fixture
 def visitor_client(api_client, visitor_user):
-    api_client.force_authenticate(user=visitor_user)
-    return api_client
+    client = APIClient()
+    client.force_authenticate(user=visitor_user)
+    return client
 
 
 @pytest.fixture
@@ -127,6 +129,43 @@ class TestAuth:
         assert resp.status_code == status.HTTP_200_OK
         assert 'access_token' in resp.data
         assert resp.data['user']['role'] == 'visitor'
+
+    def test_admin_login_token_marks_admin(self, api_client, admin_user):
+        from rest_framework_simplejwt.tokens import AccessToken
+
+        resp = api_client.post('/api/v1/auth/login/', {
+            'email': 'admin@test.com', 'password': 'Admin@1234'
+        })
+
+        assert resp.status_code == status.HTTP_200_OK
+        token = AccessToken(resp.data['access_token'])
+        assert token['role'] == 'admin'
+        assert token['is_admin'] is True
+
+    def test_staff_user_with_visitor_role_logs_in_as_admin(self, api_client, db):
+        from django.contrib.auth import get_user_model
+        from rest_framework_simplejwt.tokens import AccessToken
+
+        User = get_user_model()
+        user = User.objects.create_user(
+            username='legacy_admin',
+            email='legacy-admin@test.com',
+            password='Admin@1234',
+            first_name='Legacy',
+            last_name='Admin',
+            role='visitor',
+            is_staff=True,
+            is_superuser=True,
+        )
+
+        resp = api_client.post('/api/v1/auth/login/', {
+            'email': user.email, 'password': 'Admin@1234'
+        })
+
+        assert resp.status_code == status.HTTP_200_OK
+        token = AccessToken(resp.data['access_token'])
+        assert token['role'] == 'admin'
+        assert token['is_admin'] is True
 
     def test_login_wrong_password(self, api_client, visitor_user):
         resp = api_client.post('/api/v1/auth/login/', {

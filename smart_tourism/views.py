@@ -14,7 +14,7 @@ def register(request):
     User = get_user_model()
 
     name = (request.data.get("name") or "").strip()
-    email = request.data.get("email")
+    email = (request.data.get("email") or "").strip().lower()
     password = request.data.get("password")
 
     if not email or not password:
@@ -26,8 +26,8 @@ def register(request):
     # Check existing user
     if User.objects.filter(email=email).exists():
         return Response(
-            {"error": "User already exists"},
-            status=400
+            {"error": "An account with this email already exists. Please login instead."},
+            status=409
         )
 
     name_parts = name.split(maxsplit=1)
